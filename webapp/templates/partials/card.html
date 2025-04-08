@@ -1,0 +1,12 @@
+{% macro render_card(name, url, description, tags) %}
+<div class="card">
+    <a href="{{ url }}" target="_blank">{{ name }}</a>
+    <p>{{ description | truncate(500, True) }}</p>
+    
+    <div class="tag-container">
+        {% for tag in tags %}
+            <span class="tag">{{ tag }}</span>
+        {% endfor %}
+    </div>
+</div>
+{% endmacro %}
