@@ -5,14 +5,11 @@ crawler = Crawler()
 
 async def main():
     print("running Crawler...")
-    if not (await crawler.run("url_list.txt", 1)):
+    if not (await crawler.run("url_list.txt", 10)):
         print("Web crawl failed!")
         return
     
     print("Web crawl successful")
-    #print(f"Papers found: {papers.keys()}")
-
-    # print("Storing HTML into a csv...")
     
 
 

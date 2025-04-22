@@ -67,11 +67,11 @@ def isValid(url: str, hostname: str) -> bool:
     """
 
     if url[0:4] != "http":
-        print("http not found in URL")
+        #print("http not found in URL")
         return False
     
     if hostname not in url:
-        print("hostname not found in URL")
+        #print("hostname not found in URL")
         return False
     
     return True
@@ -98,10 +98,6 @@ def extract_text(html):
         return ""
 
 def writePagesToCSV(data: Dict[str, str]) -> bool:    
-    print("html:\n\n\n")
-    print(data['https://deepmind.google/research/publications/65827'])
-    print("\n\n\ndone")
-
     try:
         with open('raw_data.csv', 'w', newline='', encoding='utf-8') as f:
             writer = csv.writer(f)

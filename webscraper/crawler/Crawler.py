@@ -12,7 +12,6 @@ class Crawler(object):
         self.papers = {} # Dict of papers found when crawling schema: <url>:<html>
         self.visited = set([]) # Set of visited URLs for traversal
         self.error_list = [] # List of URLs that were not parse-able
-        self.htmlParser = HTMLParser()
         self.hostname = ""
 
     async def run(self, path: str, depth: int) -> Dict[str, str]:
@@ -32,9 +31,9 @@ class Crawler(object):
             
             await asyncio.gather(*tasks)
 
-            print(f"Papers found: {self.papers.keys()}")
+            #print(f"Papers found: {self.papers.keys()}")
 
-            print("Storing HTML into a csv...")
+            #print("Storing HTML into a csv...")
             return writePagesToCSV(self.papers)
 
     async def crawlUrl(self, url: str, counter: int) -> None:
@@ -42,24 +41,41 @@ class Crawler(object):
             return
         self.visited.add(url)
 
-        async with httpx.AsyncClient() as client:
-            self.visited.add(url)
-            print(f"crawlUrl: {url} counter: {counter}")
-            response = await client.get(url)
-            responseHtml = response.text
-            isPaper, url_list, error_list = self.htmlParser.run(url, responseHtml)
+        async with httpx.AsyncClient(follow_redirects=True) as client:
+            try:
+                self.visited.add(url)
+                print(f"crawlUrl: {url} counter: {counter}")
+                response = await client.get(url)
+                responseHtml = response.text
 
-            self.error_list.extend(error_list)
+                #response = await client.get(url, headers={"User-Agent": "Mozilla/5.0"})
+                #print(f"URL: {url} | Status: {response.status_code} | Final URL: {str(response.url)}")
 
-            if isPaper:
-                self.papers[url] = responseHtml
-            
-            if counter <= 0:
+                if response.history:
+                    print(f"Redirect history for {url}:")
+                    for r in response.history:
+                        print(f"{r.status_code} → {r.headers.get('location')}")
+
+                htmlParser = HTMLParser()
+                isPaper, url_list, error_list = htmlParser.run(url, responseHtml)
+
+                self.error_list.extend(error_list)
+
+                if isPaper:
+                    #print(f"paper: {url}")
+                    #print(f"Length of HTML: {len(responseHtml)}")
+                    self.papers[url] = responseHtml
+                
+                if counter <= 0:
+                    return
+
+                tasks = []
+                for url in url_list:
+                    if self.hostname in getHostName(url):
+                        tasks.append(asyncio.create_task(self.crawlUrl(url, counter - 1)))
+                
+                await asyncio.gather(*tasks)
+            except :
+                print("error loading page")
+                self.error_list.extend(url)
                 return
-
-            tasks = []
-            for url in url_list:
-                if self.hostname in getHostName(url):
-                    tasks.append(asyncio.create_task(self.crawlUrl(url, counter - 1)))
-            
-            await asyncio.gather(*tasks)

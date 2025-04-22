@@ -15,7 +15,7 @@ class HTMLParser(HTMLParser):
                     formatted_url = cleanUrl(new_url)
 
                     if isValid(formatted_url, self.hostname):
-                        print(f"valid url: {formatted_url}, {self.hostname}")
+                        #print(f"valid url: {formatted_url}, {self.hostname}")
                         self.url_list.append(formatted_url)
 
     def run(self, url, html: str) -> Tuple[bool, List[str], List[str]]:
