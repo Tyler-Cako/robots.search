@@ -5,7 +5,7 @@ crawler = Crawler()
 
 async def main():
     print("running Crawler...")
-    if not (await crawler.run("url_list.txt", 10)):
+    if not (await crawler.run("url_list.txt", 12)):
         print("Web crawl failed!")
         return
     
