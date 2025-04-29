@@ -76,6 +76,8 @@ class Recommender:
         self.df = pd.read_csv(csv_path, dtype={"Authors": str, "KMeansTags": object})
         self._preprocess()
 
+        print(self.df.columns)
+
     def clean_text(self, text):
         if not isinstance(text, str):
             return ""
@@ -90,8 +92,12 @@ class Recommender:
 
     def _preprocess(self):
         self.df.loc[:,"Authors"] = [self._str_to_list(authors) for authors in self.df["Authors"]]
-        self.df.loc[:,"KMeansTags"] = [self._str_to_list(tags[2:-2], delimiter="', '") for tags in self.df["KMeansTags"]]    
-        
+        self.df.loc[:,"KMeansTags"] = [self._str_to_list(tags[2:-2], delimiter="', '") for tags in self.df["KMeansTags"]]
+
+    def get_index_of_url(self, url):
+        matches = self.df[self.df['URL'].str.contains(url, case=False, na=False)]   
+        index = matches.index.tolist()[0]
+        return index
 
     def find_similar(self, ref_idx=0, n=10):
         paper_count = self.df.shape[0]
