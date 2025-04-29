@@ -12,13 +12,13 @@ def search_page():
 @app.post('/results')
 def search_results():
     search_query = request.form['search_query']
-    results = search.search(search_query, 5)
+    results = search.search(search_query, 10)
 
     
 
-    for result in results:
-        tag_list = ast.literal_eval(result['tags'])
-        result['tag_list'] = tag_list
+    # for result in results:
+    #     tag_list = ast.literal_eval(result['tags'])
+    #     result['tag_list'] = tag_list
 
     return render_template("index.html", results=results)
 
