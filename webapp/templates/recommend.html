@@ -1,0 +1,26 @@
+{% from "partials/card.html" import render_card %}
+<!doctype html>
+<html>
+<head>
+    <title>Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container" id="search">
+        <h1>ROBOTS.SEARCH</h1>
+        <p>A search engine for research papers in AI, ML and Data Science</p>
+
+        <a class="btn" href="{{ url_for('search_results')}}">Home</a>
+        
+        {{ render_card(selected.title, selected.url, selected.abstract, selected.tags, True) }}
+
+        <div id="card-container">
+            {% if recs %}
+                {% for rec in recs %}
+                    {{ render_card(rec.title, rec.url, rec.abstract, rec.tags, False) }}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

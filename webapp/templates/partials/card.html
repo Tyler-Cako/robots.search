@@ -1,12 +1,34 @@
-{% macro render_card(title, url, abstract, tags) %}
-<div class="card">
-    <a href="{{ url }}" target="_blank">{{ title }}</a>
-    <p>{{ abstract | truncate(500, True) }}</p>
-    
-    <div class="tag-container">
-        {% for tag in tags %}
-            <span class="tag">{{ tag }}</span>
-        {% endfor %}
+{% macro render_card(title, url, abstract, tags, is_selected) %}
+{% if (is_selected) %}
+    <div class="card selected-card">
+        <a href="{{ url }}" target="_blank">{{ title }}</a>
+        <p>{{ abstract | truncate(500, True) }}</p>
+        
+        <div class="tag-container">
+            {% for tag in tags %}
+                <span class="tag">{{ tag }}</span>
+            {% endfor %}
+        </div>
     </div>
-</div>
+{% else %}
+    <div class="card">
+        <a href="{{ url }}" target="_blank">{{ title }}</a>
+        <p>{{ abstract | truncate(500, True) }}</p>
+        
+        <div class="tag-container">
+            {% for tag in tags %}
+                <span class="tag">{{ tag }}</span>
+            {% endfor %}
+        </div>
+        <form method="POST" action="{{ url_for('recommend_papers') }}">
+            <input type="hidden" name="title" value="{{ title }}" >
+            <input type="hidden" name="url" value="{{ url }}" >
+            <input type="hidden" name="abstract" value="{{ abstract }}" >
+            <input type="hidden" name="tags" value="{{ tags }}" >
+            <input class="btn big" type="submit" value="Recommend Papers" />
+        </form>
+    </div>
+{% endif %}
+
+
 {% endmacro %}

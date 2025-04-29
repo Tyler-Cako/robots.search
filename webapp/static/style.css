@@ -32,6 +32,16 @@ h1 {
     background-color: #ffd494;
     border: none;
     cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    color: black;
+}
+
+.btn.big {
+    width: 15vw;
+    height: 5vh;
+    margin-top: 15px;
+    margin-left: 0px;
 }
 
 .filter-btn {
@@ -72,6 +82,10 @@ h1 {
     font-size: 1rem;
     color: #666;
     margin: 16px 0 16px;
+}
+
+.selected-card {
+    background-color: #b4d1ff;
 }
 
 .tag-container {
