@@ -25,7 +25,7 @@
         <div id="card-container">
             {% if results %}
                 {% for result in results %}
-                    {{ render_card(result.name, result.url, result.description, result.tags) }}
+                    {{ render_card(result.title, result.url, result.abstract, result.tag_list) }}
                 {% endfor %}
             {% endif %}
         </div>
